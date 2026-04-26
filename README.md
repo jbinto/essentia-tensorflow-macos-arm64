@@ -1,5 +1,7 @@
 # essentia-tensorflow on macOS arm64 — a working build recipe
 
+> Assisted by Claude Code (Opus 4.7, 1M context), 2026-04-26.
+
 Getting `essentia` to import on Apple Silicon **with TensorFlow algorithms enabled**
 is fiddly. The PyPI `essentia-tensorflow` arm64 wheel is broken
 ([upstream issue #1486](https://github.com/MTG/essentia/issues/1486)), and the

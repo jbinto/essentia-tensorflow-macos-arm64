@@ -1,3 +1,4 @@
+# Assisted by Claude Code (Opus 4.7, 1M context), 2026-04-26.
 # this repo is just docs + scripts; don't accidentally commit checkouts or models
 essentia/
 .venv/

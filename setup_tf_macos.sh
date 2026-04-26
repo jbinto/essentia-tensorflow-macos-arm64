@@ -1,4 +1,5 @@
 #!/bin/bash
+# Assisted by Claude Code (Opus 4.7, 1M context), 2026-04-26.
 # Build a TensorFlow link context for Essentia on macOS arm64.
 #
 # The upstream src/3rdparty/tensorflow/setup_from_python.sh is Linux-only:

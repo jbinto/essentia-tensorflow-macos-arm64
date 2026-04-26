@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Assisted by Claude Code (Opus 4.7, 1M context), 2026-04-26.
 """Minimal hello-world: load an audio file, run Discogs-EffNet, print embedding shape.
 
 Usage:
