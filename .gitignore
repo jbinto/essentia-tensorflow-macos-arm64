@@ -1,0 +1,11 @@
+# this repo is just docs + scripts; don't accidentally commit checkouts or models
+essentia/
+.venv/
+venv/
+tf-context/
+models/
+build/
+*.pb
+*.pyc
+__pycache__/
+.DS_Store
