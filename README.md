@@ -155,6 +155,16 @@ OK
 
 That's it — you have native-arm64 Essentia + TensorFlow inference working.
 
+## Should I add `tensorflow-metal` for GPU acceleration?
+
+Short answer: **no**, at least not on M1 Pro for Discogs-EffNet inference. The
+plugin installs cleanly and the GPU is genuinely used (not just loaded), but
+end-to-end inference comes out **~2× slower** than plain CPU TF — likely
+because a handful of `SplitV` ops fall back to CPU and force host↔device
+transfers inside every EfficientNet block. See [`METAL_NOTES.md`](./METAL_NOTES.md)
+for the install command, version pinning, benchmark numbers, op-fallback
+analysis, and a reproduction recipe.
+
 ## Technical writeup
 
 ### Why the PyPI wheel doesn't work
