@@ -49,39 +49,43 @@ please bump both the SHA and the date.
 - Apple Silicon Mac, Xcode Command Line Tools (`xcode-select --install`)
 - Homebrew packages:
   ```sh
-  brew install eigen libyaml fftw ffmpeg libsamplerate taglib chromaprint pkgconf
+  brew install eigen libyaml fftw ffmpeg libsamplerate taglib chromaprint pkgconf uv
   ```
   (`pkgconf` provides the `pkg-config` binary; the upstream `pkg-config` formula
-  has been retired by Homebrew.)
+  has been retired by Homebrew. `uv` is Astral's Python package/project manager
+  — we use it to get a clean, fully-isolated Python 3.11 + TensorFlow 2.15
+  environment without depending on whatever system Python you happen to have.)
 
 ### Build
 
 ```sh
-# 1. Pick a working dir and a venv. This recipe assumes everything lives
-#    under one directory; adjust to taste.
+# 1. Pick a working dir. Everything in this recipe lives under one directory.
 mkdir -p ~/src/essentia-build && cd ~/src/essentia-build
-python3 -m venv .venv
-source .venv/bin/activate
-pip install --upgrade pip wheel setuptools
-pip install tensorflow==2.15.0    # CPU; provides the dylibs we link against
 
-# 2. Get this repo (for the script + docs) and the essentia source.
+# 2. Create an isolated Python 3.11 venv with TensorFlow 2.15 installed.
+#    `uv` will download the correct CPython if you don't have it. The venv is
+#    a regular `.venv/` — `source .venv/bin/activate` works the way you expect.
+uv venv --python 3.11 .venv
+source .venv/bin/activate
+uv pip install tensorflow==2.15.0    # CPU; provides the dylibs we link against
+
+# 3. Get this repo (for the script + docs) and the essentia source.
 #    Essentia is pinned to the exact commit this recipe was last verified
-#    against — see the "Tested against" note below.
-git clone https://github.com/<you>/essentia-tensorflow-macos-arm64.git
+#    against — see the "Tested against" table above.
+git clone https://github.com/jbinto/essentia-tensorflow-macos-arm64.git
 git clone --recursive https://github.com/MTG/essentia.git
 git -C essentia checkout 7e90d20b3965f334682930c9b02992c46d273717
 git -C essentia submodule update --init --recursive
 ln -s ../essentia essentia-tensorflow-macos-arm64/essentia       # convenience
 
-# 3. Build the TF link context.
+# 4. Build the TF link context (creates ./tf-context/ with symlinks + pkg-config).
 cd essentia-tensorflow-macos-arm64
 PYTHON="$(cd .. && pwd)/.venv/bin/python" \
 ESSENTIA_SRC="$(cd .. && pwd)/essentia" \
 CTX_DIR="$(cd .. && pwd)/tf-context" \
   ./setup_tf_macos.sh
 
-# 4. Configure and build essentia.
+# 5. Configure and build essentia.
 cd ../essentia
 export PKG_CONFIG_PATH="$HOME/src/essentia-build/tf-context/lib/pkgconfig:$(brew --prefix eigen)/share/pkgconfig:$PKG_CONFIG_PATH"
 PY_SITE=$(python -c "import site; print(site.getsitepackages()[0])")
