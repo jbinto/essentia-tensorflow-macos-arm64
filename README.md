@@ -4,8 +4,21 @@ Getting `essentia` to import on Apple Silicon **with TensorFlow algorithms enabl
 is fiddly. The PyPI `essentia-tensorflow` arm64 wheel is broken
 ([upstream issue #1486](https://github.com/MTG/essentia/issues/1486)), and the
 source build's own TF setup script is Linux-only. This repo documents what
-actually works as of April 2026, on macOS 26.1 / Python 3.11 / TensorFlow 2.15.0
-/ Essentia HEAD (`v2.1_beta5-1418-g7e90d20b`).
+actually works.
+
+**Tested against** (last verified 2026-04-26):
+
+| | |
+|---|---|
+| macOS | 26.1, arm64 (Apple Silicon) |
+| Toolchain | Apple clang from Xcode CLT |
+| Python | 3.11.15 |
+| TensorFlow | 2.15.0 (from PyPI) |
+| Essentia | `7e90d20b` (`v2.1_beta5-1418-g7e90d20b`, dated 2026-04-16) |
+
+Essentia's `master` moves; the `git checkout` step below pins to the exact
+commit this was tested against. If you re-test against a newer essentia,
+please bump both the SHA and the date.
 
 ## tl;dr
 
@@ -51,8 +64,12 @@ pip install --upgrade pip wheel setuptools
 pip install tensorflow==2.15.0    # CPU; provides the dylibs we link against
 
 # 2. Get this repo (for the script + docs) and the essentia source.
+#    Essentia is pinned to the exact commit this recipe was last verified
+#    against — see the "Tested against" note below.
 git clone https://github.com/<you>/essentia-tensorflow-macos-arm64.git
 git clone --recursive https://github.com/MTG/essentia.git
+git -C essentia checkout 7e90d20b3965f334682930c9b02992c46d273717
+git -C essentia submodule update --init --recursive
 ln -s ../essentia essentia-tensorflow-macos-arm64/essentia       # convenience
 
 # 3. Build the TF link context.
