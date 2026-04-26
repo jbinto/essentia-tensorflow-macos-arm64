@@ -100,17 +100,24 @@ is `PartitionedCall:1` (1280-dim) — see
 for the full schema.
 
 ```sh
-# Grab a model (~18 MB)
+# Grab the Discogs-EffNet graph (~18 MB) and its schema JSON.
 mkdir -p ~/src/essentia-build/models
-curl -fL --retry 3 \
-  -o ~/src/essentia-build/models/discogs-effnet-bs64-1.pb \
-  https://essentia.upf.edu/models/feature-extractors/discogs-effnet/discogs-effnet-bs64-1.pb
+cd ~/src/essentia-build/models
+curl -fLO --retry 3 https://essentia.upf.edu/models/feature-extractors/discogs-effnet/discogs-effnet-bs64-1.pb
+curl -fLO --retry 3 https://essentia.upf.edu/models/feature-extractors/discogs-effnet/discogs-effnet-bs64-1.json
 
-# Pick any audio file. Essentia's own test corpus ships several:
+# Run the hello-world. Essentia's test corpus ships several wav files;
+# `dubstep.wav` is short and works fine.
+cd -
 python hello_essentia_tf.py \
   ~/src/essentia-build/essentia/test/audio/recorded/dubstep.wav \
   ~/src/essentia-build/models/discogs-effnet-bs64-1.pb
 ```
+
+To browse other models: `https://essentia.upf.edu/models/` is a plain Apache
+directory listing (`feature-extractors/`, `classifiers/`, `pitch/`, `tempo/`,
+etc.). Every `.pb` file has a sibling `.json` with the input/output schema and
+recommended pre-processing — read that before swapping models in the script.
 
 Expected output:
 
